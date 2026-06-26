@@ -1,3 +1,6 @@
+# Patrón Template Method (CBV): todas las vistas heredan de ListView/DetailView
+# y sobrescriben get_queryset() y get_context_data() para personalizar
+# la consulta y el contexto sin alterar el flujo base del framework.
 # Vistas de productos: listado público, detalle, y filtrado por categoría
 from django.db.models import Q
 from django.shortcuts import get_object_or_404

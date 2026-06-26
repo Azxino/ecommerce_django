@@ -1,3 +1,8 @@
+# Patrón Command: encapsula la operación de poblar la base de datos como
+# un objeto comando ejecutable via `python manage.py seed_data`.
+# Django management commands implementan este patrón: la clase Command
+# define handle() como el punto de entrada, y el framework se encarga
+# del discovery, parsing de argumentos y ejecución.
 from datetime import datetime, timedelta
 
 from django.core.management.base import BaseCommand

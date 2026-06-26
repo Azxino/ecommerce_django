@@ -2,6 +2,10 @@ from django.db import models
 from django.utils import timezone
 
 
+# Patrón Strategy: Cupon encapsula diferentes algoritmos de descuento
+# (PORCENTAJE vs MONTO_FIJO) y los selecciona en tiempo de ejecución
+# según el valor del campo `tipo`. También incluye la validación
+# `es_valido` como estrategia de elegibilidad del cupón.
 class Cupon(models.Model):
     class TipoDescuento(models.TextChoices):
         PORCENTAJE = 'PORCENTAJE', 'Porcentaje (%)'

@@ -1,3 +1,7 @@
+# Patrón Template Method (CBV): ListView y DetailView con LoginRequiredMixin
+# para filtrar pedidos del usuario autenticado.
+# Patrón Decorator: @require_POST y @csrf_protect envuelven las funciones
+# create_order y cancel_order para restringir el método HTTP y proteger CSRF.
 # Vistas de pedidos: listado, detalle, creación y cancelación (solo usuarios autenticados)
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin

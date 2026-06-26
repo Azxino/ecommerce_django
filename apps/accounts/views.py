@@ -12,6 +12,9 @@ from .forms import LoginForm, PerfilForm, RegistroForm
 from .models import CustomUser
 
 
+# Patrón Template Method (CBV): CreateView define el esqueleto del algoritmo
+# (get, post, form_valid, etc.) y esta clase sobrescribe métodos específicos
+# para personalizar el comportamiento (auto-login, mensajes, redirecciones).
 # Vista de registro: crea un nuevo usuario, lo autentica automáticamente y redirige al listado de productos
 class RegistroView(CreateView):
     model = CustomUser
@@ -46,6 +49,8 @@ class RegistroView(CreateView):
         return super().get(request, *args, **kwargs)
 
 
+# Patrón Template Method (CBV): FormView con personalización de form_valid
+# para login con soporte ?next= y mensajes flash.
 # Vista de inicio de sesión: valida credenciales e inicia sesión
 class LoginView(FormView):
     form_class = LoginForm
@@ -80,6 +85,8 @@ class LoginView(FormView):
         return super().get(request, *args, **kwargs)
 
 
+# Patrón Template Method (CBV) + Patrón Decorator: @csrf_protect y @never_cache
+# decoran el método post para agregar seguridad sin modificar la lógica interna.
 # Vista de cierre de sesión: solo acepta POST (seguridad), evita que el navegador cachee la página
 class LogoutView(TemplateView):
     @method_decorator(csrf_protect)
@@ -94,6 +101,9 @@ class LogoutView(TemplateView):
         return redirect('products:list')
 
 
+# Patrón Template Method (CBV): UpdateView + LoginRequiredMixin (compuesto)
+# Patrón Strategy: LoginRequiredMixin es una estrategia de autenticación que
+# se compone con la vista para restringir acceso según el estado del usuario.
 # Vista de perfil: solo usuarios autenticados pueden editar su perfil
 class PerfilView(LoginRequiredMixin, UpdateView):
     model = CustomUser

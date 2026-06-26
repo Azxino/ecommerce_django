@@ -1,3 +1,8 @@
+# Patrón Template Method (CBV): 22 vistas que heredan de TemplateView,
+# ListView, CreateView, UpdateView, DeleteView y DetailView. Cada una
+# sobrescribe get(), get_queryset(), get_context_data(), form_valid(), etc.
+# Patrón Strategy: composición con LoginRequiredMixin para autenticación
+# más verificación manual de rol admin en get() como estrategia de autorización.
 # Panel de administración (dashboard): vistas protegidas solo para administradores
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin

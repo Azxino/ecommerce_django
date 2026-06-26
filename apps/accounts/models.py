@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+ 
 
 # Modelo de usuario personalizado con roles (Administrador / Cliente)
 class CustomUser(AbstractUser):

@@ -1,3 +1,11 @@
+# Patrón Singleton: las settings de Django son un objeto único global
+# (django.conf.settings) accesible desde cualquier módulo. La configuración
+# se carga una sola vez al iniciar el servidor y permanece inmutable.
+# Patrón Chain of Responsibility: la lista MIDDLEWARE define una cadena
+# de procesamiento donde cada middleware recibe el request secuencialmente
+# y el response a la vuelta (procesamiento bidireccional).
+# Patrón Template Method: los context_processors siguen una interfaz fija
+# (request → dict) y Django los ejecuta automáticamente en cada renderizado.
 import os
 from pathlib import Path
 from django.contrib.messages import constants as messages

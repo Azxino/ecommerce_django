@@ -4,6 +4,9 @@ from django.contrib import messages
 from django.shortcuts import redirect
 
 
+# Patrón Decorator: envuelve una view function para agregar verificación de rol
+# sin modificar la función original. Permite componer comportamiento adicional
+# (autenticación + autorización) de forma transparente.
 # Decorador: solo permite acceso a administradores autenticados
 def admin_required(view_func):
     @wraps(view_func)
@@ -22,6 +25,7 @@ def admin_required(view_func):
     return _wrapped_view
 
 
+# Patrón Decorator: mismo esquema que admin_required, pero para rol CLIENTE
 # Decorador: solo permite acceso a clientes autenticados
 def client_required(view_func):
     @wraps(view_func)

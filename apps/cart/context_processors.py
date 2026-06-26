@@ -1,3 +1,6 @@
+# Patrón Observer / Template Method: mismo esquema que categorias_globales.
+# Se ejecuta automáticamente en cada request para inyectar el contador
+# de items del carrito en todas las plantillas.
 from .cart import Cart
 
 

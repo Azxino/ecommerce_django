@@ -1,3 +1,6 @@
+# Patrón Chain of Responsibility: el middleware es un eslabón en la cadena
+# de procesamiento de Django. Cada middleware recibe el request, puede
+# procesarlo y pasarlo al siguiente, o modificar el response en el retorno.
 # Middleware que evita que el navegador guarde páginas en caché
 # Esto impide que usuarios puedan volver con el botón "atrás" después de cerrar sesión
 from django.utils.deprecation import MiddlewareMixin

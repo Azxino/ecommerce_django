@@ -1,3 +1,9 @@
+# Patrón MVC (Model-View-Controller): urlpatterns actúa como el controlador
+# frontal (Front Controller) que recibe todas las peticiones HTTP y las
+# despacha al controlador específico (vista) según la URL.
+# Patrón Chain of Responsibility: cada petición atraviesa los patrones de URL
+# en orden hasta encontrar el primero que coincide; si no hay coincidencia,
+# Django devuelve 404.
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin

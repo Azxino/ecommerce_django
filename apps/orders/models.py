@@ -6,6 +6,10 @@ from django.db import models
 from apps.products.models import Producto
 
 
+# Patrón Strategy: los estados del pedido (PENDIENTE → CONFIRMADO → ENVIADO
+# → ENTREGADO, o CANCELADO) definen comportamientos distintos. Cada estado
+# determina qué transiciones son válidas y qué acciones se permiten
+# (ej: solo PENDIENTE o CONFIRMADO pueden cancelarse).
 class Pedido(models.Model):
     class Estado(models.TextChoices):
         PENDIENTE = 'PENDIENTE', 'Pendiente'

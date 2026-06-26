@@ -1,3 +1,8 @@
+# Patrón Singleton (por sesión): el carrito se instancia una sola vez por
+# sesión de usuario. El constructor verifica si ya existe en session[] y
+# lo reutiliza, garantizando una única instancia por usuario.
+# Patrón Strategy: get_cupon_descuento() selecciona la estrategia de descuento
+# (porcentaje vs monto fijo) según el tipo de cupón en tiempo de ejecución.
 # Carrito de compras manejado por sesión (no requiere registro para agregar productos)
 from decimal import Decimal
 
