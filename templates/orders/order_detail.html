@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Pedido #{{ pedido.id }} - Ropa Shop{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-box"></i> Pedido #{{ pedido.id }}</h2>
+    <a href="{% url 'orders:list' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Mis Pedidos
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Detalle del Pedido</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Precio</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in pedido.detalles.all %}
+                            <tr>
+                                <td>{{ detalle.producto.nombre }}</td>
+                                <td class="text-center">{{ detalle.cantidad }}</td>
+                                <td class="text-end">${{ detalle.precio }}</td>
+                                <td class="text-end fw-bold">${{ detalle.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="row justify-content-end">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td>Subtotal:</td>
+                                <td class="text-end">${{ pedido.subtotal }}</td>
+                            </tr>
+                            {% if pedido.descuento > 0 %}
+                            <tr class="text-success">
+                                <td>Descuento:</td>
+                                <td class="text-end">-${{ pedido.descuento }}</td>
+                            </tr>
+                            {% endif %}
+                            <tr class="fs-5">
+                                <td><strong>Total:</strong></td>
+                                <td class="text-end"><strong>${{ pedido.total }}</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Estado</h5>
+            </div>
+            <div class="card-body">
+                <span class="badge estado-badge fs-6
+                    {% if pedido.estado == 'PENDIENTE' %}bg-warning text-dark
+                    {% elif pedido.estado == 'CONFIRMADO' %}bg-info
+                    {% elif pedido.estado == 'ENVIADO' %}bg-primary
+                    {% elif pedido.estado == 'ENTREGADO' %}bg-success
+                    {% elif pedido.estado == 'CANCELADO' %}bg-danger
+                    {% endif %}">
+                    {{ pedido.get_estado_display }}
+                </span>
+                <hr>
+                <p class="mb-1"><strong>Fecha:</strong> {{ pedido.created_at|date:"d/m/Y H:i" }}</p>
+                {% if pedido.cupon_codigo %}
+                <p class="mb-1"><strong>Cupón:</strong> {{ pedido.cupon_codigo }}</p>
+                {% endif %}
+                {% if pedido.notas %}
+                <p class="mb-0"><strong>Notas:</strong> {{ pedido.notas }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if pedido.estado == 'PENDIENTE' or pedido.estado == 'CONFIRMADO' %}
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="post" action="{% url 'orders:cancel' pedido.id %}" data-confirm="¿Cancelar este pedido?">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                        <i class="bi bi-x-circle"></i> Cancelar Pedido
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

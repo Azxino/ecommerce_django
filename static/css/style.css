@@ -1,0 +1,102 @@
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex: 1;
+}
+
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-img-top {
+    height: 250px;
+    object-fit: cover;
+}
+
+.producto-img {
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.carrito-img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+}
+
+.sidebar {
+    min-height: calc(100vh - 56px);
+}
+
+.nav-link.active {
+    font-weight: 600;
+}
+
+.dashboard-card {
+    border: none;
+    border-radius: 10px;
+}
+
+.dashboard-card .card-body {
+    padding: 1.5rem;
+}
+
+.dashboard-icon {
+    font-size: 2rem;
+    opacity: 0.8;
+}
+
+.stock-bajo {
+    color: #dc3545;
+    font-weight: 600;
+}
+
+.stock-medio {
+    color: #ffc107;
+    font-weight: 600;
+}
+
+.stock-alto {
+    color: #198754;
+    font-weight: 600;
+}
+
+.estado-badge {
+    font-size: 0.85rem;
+    padding: 0.35em 0.65em;
+}
+
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 180px;
+    }
+
+    .display-4 {
+        font-size: 1.75rem;
+    }
+}
+
+footer a:hover {
+    text-decoration: underline !important;
+}

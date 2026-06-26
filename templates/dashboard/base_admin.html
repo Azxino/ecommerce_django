@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3 col-lg-2 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body p-3">
+                <h6 class="text-muted text-uppercase small mb-3">Administración</h6>
+                <div class="nav flex-column nav-pills gap-1">
+                    <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}" href="{% url 'dashboard:home' %}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                    <a class="nav-link {% if 'usuario' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dashboard:user_list' %}">
+                        <i class="bi bi-people"></i> Usuarios
+                    </a>
+                    <a class="nav-link {% if 'producto' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dashboard:product_list' %}">
+                        <i class="bi bi-box-seam"></i> Productos
+                    </a>
+                    <a class="nav-link {% if 'categoria' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dashboard:category_list' %}">
+                        <i class="bi bi-tags"></i> Categorías
+                    </a>
+                    <a class="nav-link {% if 'pedido' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dashboard:order_list' %}">
+                        <i class="bi bi-cart-check"></i> Pedidos
+                    </a>
+                    <a class="nav-link {% if 'cupon' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'dashboard:coupon_list' %}">
+                        <i class="bi bi-ticket-perforated"></i> Cupones
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9 col-lg-10">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% block admin_content %}{% endblock %}
+    </div>
+</div>
+{% endblock %}

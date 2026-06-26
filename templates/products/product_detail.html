@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ producto.nombre }} - Ropa Shop{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'products:list' %}">Productos</a></li>
+        <li class="breadcrumb-item">
+            <a href="{% url 'products:category' producto.categoria.slug %}">{{ producto.categoria.nombre }}</a>
+        </li>
+        <li class="breadcrumb-item active">{{ producto.nombre }}</li>
+    </ol>
+</nav>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            {% if producto.imagen %}
+            <img src="{{ producto.imagen.url }}" class="card-img-top producto-img" alt="{{ producto.nombre }}">
+            {% else %}
+            <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="height:400px;">
+                <i class="bi bi-image" style="font-size:5rem;"></i>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-body">
+                <h2 class="card-title">{{ producto.nombre }}</h2>
+                <p class="text-muted mb-2">
+                    <i class="bi bi-tag"></i> {{ producto.categoria.nombre }}
+                </p>
+                <h3 class="text-primary fw-bold mb-3">${{ producto.precio }}</h3>
+
+                <div class="mb-3">
+                    {% if producto.tiene_stock %}
+                    <span class="badge bg-success fs-6">
+                        <i class="bi bi-check-circle"></i> En stock ({{ producto.stock }} disponibles)
+                    </span>
+                    {% else %}
+                    <span class="badge bg-danger fs-6">
+                        <i class="bi bi-x-circle"></i> Agotado
+                    </span>
+                    {% endif %}
+                </div>
+
+                <p class="card-text">{{ producto.descripcion|linebreaks }}</p>
+
+                {% if producto.tiene_stock %}
+                <form method="post" action="{% url 'cart:add' producto.id %}">
+                    {% csrf_token %}
+                    <div class="row g-2 align-items-center mb-3">
+                        <div class="col-auto">
+                            <label class="form-label fw-bold mb-0">Cantidad:</label>
+                        </div>
+                        <div class="col-4">
+                            <input type="number" name="cantidad" value="1" min="1" max="{{ producto.stock }}" class="form-control">
+                        </div>
+                        <div class="col">
+                            <button type="submit" class="btn btn-success w-100">
+                                <i class="bi bi-cart-plus"></i> Añadir al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if relacionados %}
+<div class="mt-5">
+    <h4><i class="bi bi-link"></i> Productos Relacionados</h4>
+    <div class="row g-3 mt-2">
+        {% for prod in relacionados %}
+        <div class="col-6 col-md-3">
+            <div class="card h-100 shadow-sm">
+                {% if prod.imagen %}
+                <img src="{{ prod.imagen.url }}" class="card-img-top" alt="{{ prod.nombre }}" style="height:150px;">
+                {% else %}
+                <div class="bg-light d-flex align-items-center justify-content-center text-muted" style="height:150px;">
+                    <i class="bi bi-image" style="font-size:2rem;"></i>
+                </div>
+                {% endif %}
+                <div class="card-body text-center">
+                    <h6 class="card-title">{{ prod.nombre }}</h6>
+                    <p class="text-primary fw-bold mb-2">${{ prod.precio }}</p>
+                    <a href="{% url 'products:detail' prod.slug %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

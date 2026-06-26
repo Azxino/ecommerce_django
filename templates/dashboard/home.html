@@ -1,0 +1,188 @@
+{% extends 'dashboard/base_admin.html' %}
+{% load static %}
+
+{% block title %}Panel de Administración - Ropa Shop{% endblock %}
+
+{% block admin_content %}
+<h2 class="mb-4"><i class="bi bi-speedometer2"></i> Panel de Administración</h2>
+
+<div class="row g-4 mb-4">
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card dashboard-card bg-primary text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Usuarios</h6>
+                        <h3 class="mb-0">{{ total_usuarios }}</h3>
+                        <small>{{ total_clientes }} clientes</small>
+                    </div>
+                    <i class="bi bi-people dashboard-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card dashboard-card bg-success text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Productos</h6>
+                        <h3 class="mb-0">{{ total_productos }}</h3>
+                        <small>{{ productos_disponibles }} disponibles</small>
+                    </div>
+                    <i class="bi bi-box-seam dashboard-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card dashboard-card bg-warning text-dark shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Pedidos</h6>
+                        <h3 class="mb-0">{{ total_pedidos }}</h3>
+                        <small>{{ pedidos_pendientes }} pendientes</small>
+                    </div>
+                    <i class="bi bi-cart-check dashboard-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 col-md-4 col-lg-3">
+        <div class="card dashboard-card bg-info text-white shadow">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-0">Ingresos</h6>
+                        <h3 class="mb-0">${{ ingresos_totales|floatformat:0 }}</h3>
+                        <small>pedidos activos</small>
+                    </div>
+                    <i class="bi bi-currency-dollar dashboard-icon"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-exclamation-triangle text-warning"></i> Stock Bajo</h5>
+                <a href="{% url 'dashboard:product_list' %}" class="btn btn-sm btn-outline-primary">Ver Todos</a>
+            </div>
+            <div class="card-body">
+                {% if productos_stock_bajo %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Stock</th>
+                                <th class="text-end">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in productos_stock_bajo %}
+                            <tr>
+                                <td>{{ p.nombre }}</td>
+                                <td class="text-center">
+                                    <span class="{% if p.stock == 0 %}stock-bajo{% elif p.stock <= 3 %}stock-medio{% else %}stock-alto{% endif %}">
+                                        {{ p.stock }}
+                                    </span>
+                                </td>
+                                <td class="text-end">
+                                    <a href="{% url 'dashboard:product_update' p.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0"><i class="bi bi-check-circle text-success"></i> Todos los productos tienen stock suficiente.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card shadow-sm h-100">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Últimos Pedidos</h5>
+                <a href="{% url 'dashboard:order_list' %}" class="btn btn-sm btn-outline-primary">Ver Todos</a>
+            </div>
+            <div class="card-body">
+                {% if ultimos_pedidos %}
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Cliente</th>
+                                <th>Estado</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in ultimos_pedidos %}
+                            <tr>
+                                <td><a href="{% url 'dashboard:order_detail' p.id %}">#{{ p.id }}</a></td>
+                                <td>{{ p.usuario.username }}</td>
+                                <td>
+                                    <span class="badge estado-badge
+                                        {% if p.estado == 'PENDIENTE' %}bg-warning text-dark
+                                        {% elif p.estado == 'CONFIRMADO' %}bg-info
+                                        {% elif p.estado == 'ENVIADO' %}bg-primary
+                                        {% elif p.estado == 'ENTREGADO' %}bg-success
+                                        {% elif p.estado == 'CANCELADO' %}bg-danger
+                                        {% endif %}">
+                                        {{ p.get_estado_display }}
+                                    </span>
+                                </td>
+                                <td class="text-end">${{ p.total }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">No hay pedidos registrados.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mt-2">
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0"><i class="bi bi-people"></i> Últimos Usuarios</h5>
+            </div>
+            <div class="card-body">
+                {% if ultimos_usuarios %}
+                <div class="list-group list-group-flush">
+                    {% for u in ultimos_usuarios %}
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ u.get_full_name|default:u.username }}</strong>
+                            <br>
+                            <small class="text-muted">{{ u.email }}</small>
+                        </div>
+                        <span class="badge bg-{% if u.is_admin %}danger{% else %}primary{% endif %}">
+                            {{ u.get_role_display }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted mb-0">No hay usuarios registrados.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

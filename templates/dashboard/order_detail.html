@@ -1,0 +1,111 @@
+{% extends 'dashboard/base_admin.html' %}
+{% load static %}
+
+{% block title %}Pedido #{{ pedido.id }} - Panel Admin{% endblock %}
+
+{% block admin_content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0"><i class="bi bi-cart-check"></i> Pedido #{{ pedido.id }}</h4>
+    <a href="{% url 'dashboard:order_list' %}" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Volver
+    </a>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Detalle del Pedido</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Producto</th>
+                                <th class="text-center">Cantidad</th>
+                                <th class="text-end">Precio</th>
+                                <th class="text-end">Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for detalle in pedido.detalles.all %}
+                            <tr>
+                                <td>{{ detalle.producto.nombre }}</td>
+                                <td class="text-center">{{ detalle.cantidad }}</td>
+                                <td class="text-end">${{ detalle.precio }}</td>
+                                <td class="text-end fw-bold">${{ detalle.subtotal }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end">Subtotal:</td>
+                                <td class="text-end">${{ pedido.subtotal }}</td>
+                            </tr>
+                            {% if pedido.descuento > 0 %}
+                            <tr class="text-success">
+                                <td colspan="3" class="text-end">Descuento:</td>
+                                <td class="text-end">-${{ pedido.descuento }}</td>
+                            </tr>
+                            {% endif %}
+                            <tr class="fs-5">
+                                <td colspan="3" class="text-end"><strong>Total:</strong></td>
+                                <td class="text-end"><strong>${{ pedido.total }}</strong></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Información</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-1"><strong>Cliente:</strong> {{ pedido.usuario.get_full_name|default:pedido.usuario.username }}</p>
+                <p class="mb-1"><strong>Email:</strong> {{ pedido.usuario.email|default:"-" }}</p>
+                <p class="mb-1"><strong>Fecha:</strong> {{ pedido.created_at|date:"d/m/Y H:i" }}</p>
+                {% if pedido.cupon_codigo %}
+                <p class="mb-1"><strong>Cupón:</strong> {{ pedido.cupon_codigo }}</p>
+                {% endif %}
+                {% if pedido.notas %}
+                <p class="mb-0"><strong>Notas:</strong> {{ pedido.notas }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">Actualizar Estado</h5>
+            </div>
+            <div class="card-body">
+                <span class="badge estado-badge fs-6 mb-3
+                    {% if pedido.estado == 'PENDIENTE' %}bg-warning text-dark
+                    {% elif pedido.estado == 'CONFIRMADO' %}bg-info
+                    {% elif pedido.estado == 'ENVIADO' %}bg-primary
+                    {% elif pedido.estado == 'ENTREGADO' %}bg-success
+                    {% elif pedido.estado == 'CANCELADO' %}bg-danger
+                    {% endif %}">
+                    {{ pedido.get_estado_display }}
+                </span>
+                <form method="post" action="{% url 'dashboard:order_update' pedido.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                            <select name="estado" class="form-select">
+                                    {% for key, label in pedido_estados %}
+                            <option value="{{ key }}" {% if pedido.estado == key %}selected{% endif %}>{{ label }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="bi bi-arrow-repeat"></i> Actualizar
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
